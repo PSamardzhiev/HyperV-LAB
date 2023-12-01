@@ -2,19 +2,18 @@
 #you can change your path based on your CSV location
 
 #define your variables below:
+$filename = "users.csv"
 $tmpdir = "C:\temp\"
-$csvPath = "C:\temp\users.csv"
+$csvPath = ($tmpdir+$filename)
 $ouName = "lab_import"
 $rootDN = (Get-ADDomain).DistinguishedName
 $RootDNOUPath = ("OU=" + "$ouName," + $rootDN)
 $ouExists = Get-ADOrganizationalUnit -Filter {Name -eq $ouName} -SearchBase $rootDN -ErrorAction SilentlyContinue
-$userData = Import-Csv $csvPath
 
-
-if (!(Test-Path $tmpdir -ErrorAction SilentlyContinue)) {
-    Write-Host "The script is unable to find the required path -> '$tmpdir'"
+if (!(Test-Path $tmpdir -ErrorAction Ignore)) {
+    Write-Host "The script is unable to find the required path --> '$tmpdir'"
     Start-Sleep 10
-    Write-Host "The script will try to create the following path -> '$tmpdir'"
+    Write-Host "The script will try to create the following path --> '$tmpdir'"
     Start-Sleep 10
     try {
     New-Item -ItemType Directory -Path $tmpdir
@@ -24,19 +23,23 @@ if (!(Test-Path $tmpdir -ErrorAction SilentlyContinue)) {
         Start-Sleep 10
     }
 }
-if (!(Test-Path $csvPath -ErrorAction Stop)) {
-    Write-Host "The script cannot find the users.csv file located at '$tmpdir'"
+if (!(Test-Path $csvPath -ErrorAction SilentlyContinue)) {
+    Write-Host "The script cannot find the --> $filename file located at --> '$tmpdir'"
     Start-Sleep 3
-    Write-Host "Please copy the CSV file which you want to import in Active Directory and rename it to users.csv"
+    Write-Host "To Fix this please perform the following actions:"
+    Write-Host "Copy the CSV file which you want to import in Active Directory to '$tmpdir'"
+    Start-Sleep 3
+    Write-Host "Rename the file to --> $filename so the whole path looks like this '$csvPath'"
     Start-Sleep 5
     break
 
 }
 
-# Import user data from CSV
+#Import the Source CSV file in $userData
 
-
-#check of OU exists
+$userData = Import-Csv $csvPath -ErrorAction SilentlyContinue
+Write-Host "Importing data from --> '$csvPath'"
+#check if target OU exists
 Clear-Host
 
 if (-not $ouExists) {
@@ -45,18 +48,18 @@ if (-not $ouExists) {
         -ErrorAction Stop `
         -ProtectedFromAccidentalDeletion $false
 
-        Write-Host "OU '$ouName' created successfully."
+        Write-Host "Target OU --> '$ouName' created successfully."
         Start-Sleep 3
         Clear-Host
     }
     catch {
-        Write-Host "Error creating OU '$ouName': $_"
+        Write-Host "Error creating Target OU --> '$ouName': $_"
         Start-Sleep 5
         Clear-Host
     }
 }
 else {
-    Write-Host "OU '$ouName' already exists. Skipping creation."
+    Write-Host "Target OU --> '$ouName' already exists. `n Skipping creation. `n"
 }
 
 
@@ -78,8 +81,8 @@ foreach ($user in $userData) {
     $securePassword = ConvertTo-SecureString $PSDString -AsPlainText -Force
 
     #vars for logfile
-    $log_user_exists = "User $sam already exists. The Script will skip this user!."
-    $log_user_created = "User $sam created successfully with password $PSDString. This password needs to be changed!" 
+    $log_user_exists = "User --> $sam already exists. `n The Script will skip this user!. `n"
+    $log_user_created = "User --> $sam created successfully with password $PSDString. `n This password needs to be changed! `n" 
 
     try {
         # Check if the user already exists
@@ -94,8 +97,9 @@ foreach ($user in $userData) {
 
             Write-Host $log_user_created
             $log_user_created | Out-File $tmpdir\created_users.log -Append
-            Start-Sleep 1
 
+            Start-Sleep 1
+            
         } else {
             Write-Host "$log_user_exists"
             $log_user_exists | Out-File -FilePath $tmpdir\existing_users.log -Append
@@ -107,3 +111,6 @@ foreach ($user in $userData) {
         Write-Host "Error creating user: $_"
     }
 }
+Write-Host "======================"
+Write-Host "Total number of users located in --> "$RootDNOUPath":`n:$((Get-ADUser -Filter * -SearchBase "$RootDNOUPath").Count)"
+Write-Host "======================"
