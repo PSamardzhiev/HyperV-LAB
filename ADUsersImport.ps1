@@ -10,6 +10,10 @@ $rootDN = (Get-ADDomain).DistinguishedName
 $RootDNOUPath = ("OU=" + "$ouName," + $rootDN)
 $ouExists = Get-ADOrganizationalUnit -Filter {Name -eq $ouName} -SearchBase $rootDN -ErrorAction SilentlyContinue
 
+#Scriptblock for data import pre-checks
+Write-Host "Starting data import pre-check tasks..."
+Start-Sleep 2
+
 if (!(Test-Path $tmpdir -ErrorAction Ignore)) {
     Write-Host "The script is unable to find the required path --> '$tmpdir'"
     Start-Sleep 10
@@ -27,17 +31,18 @@ if (!(Test-Path $csvPath -ErrorAction SilentlyContinue)) {
     Write-Host "The script cannot find the --> $filename file located at --> '$tmpdir'"
     Start-Sleep 3
     Write-Host "To Fix this please perform the following actions:"
-    Write-Host "Copy the CSV file which you want to import in Active Directory to '$tmpdir'"
+    Write-Host "Copy the CSV file which you want to import in Active Directory to --> '$tmpdir'"
     Start-Sleep 3
-    Write-Host "Rename the file to --> $filename so the whole path looks like this '$csvPath'"
+    Write-Host "Rename the file to --> $filename"
+    start-Sleep 3
+    write-Host "The whole Source path should look like this --> '$csvPath'"
     Start-Sleep 5
     break
-
 }
 
-#Import the Source CSV file in $userData
+#Import the Source CSV file in $userData array
 
-$userData = Import-Csv $csvPath -ErrorAction SilentlyContinue
+[array]$userData = Import-Csv $csvPath -ErrorAction SilentlyContinue
 Write-Host "Importing data from --> '$csvPath'"
 #check if target OU exists
 Clear-Host
