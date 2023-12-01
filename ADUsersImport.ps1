@@ -60,6 +60,7 @@ if (-not $ouExists) {
 }
 else {
     Write-Host "Target OU --> '$ouName' already exists. `n Skipping creation. `n"
+    start-Sleep 3
 }
 
 
