@@ -26,7 +26,7 @@ if (-not $ouExists) {
     catch {
         Write-Host "Error creating OU '$ouName': $_"
         Start-Sleep 5
-        clear
+        Clear-Host
     }
 }
 else {
