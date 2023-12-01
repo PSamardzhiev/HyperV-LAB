@@ -11,8 +11,24 @@ $drivepath = `
     "D:\Software\ISOs Store\Windows OS Releases\WS Releases\WS2K12R2.iso"
 $switch = "natVSW"
 
-#set working folder context
-Set-Location $targetfolder
+#checks if working directory exists, if not creates it and sets the shell context
+if (!(Test-Path $targetfolder)) {
+    try {
+    Write-Host "'$targetfolder' cannot be found, the script will try to create it"
+    New-Item -ItemType Directory -Path $targetfolder
+    Set-Location $targetfolder 
+    }
+    catch {
+        Write-Host "The path --> '$targetfolder' cannot be created, please try agian..."
+        Start-Sleep 2
+        break
+    }
+}
+else { 
+    Write-Host "The path --> '$targetfolder' exists, setting the shell context.."
+    Start-Sleep 2
+    Set-Location $targetfolder
+}
 
 #check and configure networking part:
 if (-not (Get-VMSwitch -Name $switch)) {
