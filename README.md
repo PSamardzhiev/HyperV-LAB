@@ -8,7 +8,7 @@ It's particularly useful for setting up a Windows 2012 R2 virtual machine as a t
 For the complete LAB Topology check HyperV-LAB.pdf file in this repository.
 
 ## LAB Topology - High level design (HLD)
-![LAB Topology](https://github.com/PSamardzhiev/HyperV-LAB/blob/main/topology.jpg)
+![alt text](https://github.com/PSamardzhiev/HyperV-LAB/blob/main/topology.jpg)
 
 
 ## Prerequisites
