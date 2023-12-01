@@ -1,8 +1,14 @@
 # Specify the path to the CSV file 
 #you can change your path based on your CSV location
 
+#define your variables below:
 $tmpdir = "C:\temp\"
 $csvPath = "C:\temp\users.csv"
+$ouName = "lab_import"
+$rootDN = (Get-ADDomain).DistinguishedName
+$RootDNOUPath = ("OU=" + "$ouName," + $rootDN)
+$ouExists = Get-ADOrganizationalUnit -Filter {Name -eq $ouName} -SearchBase $rootDN -ErrorAction SilentlyContinue
+$userData = Import-Csv $csvPath
 
 
 if (!(Test-Path $tmpdir -ErrorAction SilentlyContinue)) {
@@ -28,14 +34,10 @@ if (!(Test-Path $csvPath -ErrorAction Stop)) {
 }
 
 # Import user data from CSV
-$userData = Import-Csv $csvPath
+
 
 #check of OU exists
 Clear-Host
-$ouName = "lab_import"
-$rootDN = (Get-ADDomain).DistinguishedName
-$RootDNOUPath = ("OU=" + "$ouName," + $rootDN)
-$ouExists = Get-ADOrganizationalUnit -Filter {Name -eq $ouName} -SearchBase $rootDN -ErrorAction SilentlyContinue
 
 if (-not $ouExists) {
     try {
@@ -75,6 +77,10 @@ foreach ($user in $userData) {
     $enabled = $enabled -eq "TRUE"
     $securePassword = ConvertTo-SecureString $PSDString -AsPlainText -Force
 
+    #vars for logfile
+    $log_user_exists = "User $sam already exists. The Script will skip this user!."
+    $log_user_created = "User $sam created successfully with password $PSDString. This password needs to be changed!" 
+
     try {
         # Check if the user already exists
         if (-not (Get-ADUser -Filter {SamAccountName -eq $sam})) {
@@ -86,11 +92,14 @@ foreach ($user in $userData) {
                 -DisplayName "$lastName, $firstName" -Name "$firstName $lastName" -Path $RootDNOUPath `
                  -ChangePasswordAtLogon $true
 
-            Write-Host "User $sam created successfully." 
-            write-host "The user will be required to change his password at logon, the initial login password is $PSDString"
+            Write-Host $log_user_created
+            $log_user_created | Out-File $tmpdir\created_users.log -Append
             Start-Sleep 1
+
         } else {
-            Write-Host "User $sam already exists. The Script will skip this user!."
+            Write-Host "$log_user_exists"
+            $log_user_exists | Out-File -FilePath $tmpdir\existing_users.log -Append
+            Start-Sleep 1
         }
     }
     catch {
