@@ -83,7 +83,7 @@ foreach ($user in $userData) {
     #$password = $user."Password" password defined below in a variable for easier use
     $PSDString = 'P@ssw0rd2023'
 
-    $enabled = $enabled+="TRUE"
+    $enabled = $enabled -eq"TRUE"
     $securePassword = ConvertTo-SecureString $PSDString -AsPlainText -Force
 
     #vars for logfile
