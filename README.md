@@ -7,6 +7,9 @@ The script is designed to create a virtual switch, handle networking configurati
 It's particularly useful for setting up a Windows 2012 R2 virtual machine as a template and creating differencing disks for additional VMs.
 For the complete LAB Topology check HyperV-LAB.pdf file in this repository.
 
+## LAB Topology - High level design (HLD)
+[embed]https://github.com/PSamardzhiev/HyperV-LAB/blob/main/HyperV-LAB.pdf
+
 
 ## Prerequisites
 
