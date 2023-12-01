@@ -5,6 +5,8 @@
 This PowerShell script automates the setup and configuration of a lab environment in Hyper-V. 
 The script is designed to create a virtual switch, handle networking configurations, manage VHDX files, and create virtual machines with specific settings.
 It's particularly useful for setting up a Windows 2012 R2 virtual machine as a template and creating differencing disks for additional VMs.
+For the complete LAB Topology check HyperV-LAB.pdf file in this repository.
+
 
 ## Prerequisites
 
