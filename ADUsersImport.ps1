@@ -82,7 +82,7 @@ foreach ($user in $userData) {
     $enabled = ($user."Enabled").ToLower()
     #$password = $user."Password" password defined below in a variable for easier use
     $PSDString = 'P@ssw0rd2023'
-    $UPN = ($firstName + "." + $lastName + "@" + (get-ADDomain).DNSRoot)
+    $UPN = ($firstName + "." + $lastName + "@" + (Get-ADDomain).DNSRoot)
     
     if ($enabled -eq "true" -or $enabled -eq "false") {
     $enabled = [System.Convert]::ToBoolean($enabled)
