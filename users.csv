@@ -61,4 +61,5 @@ David,Moore,Specialist,123-555-6916,1880911,David.Moore@company.com,Random User 
 David,Wilson,Analyst,123-555-8063,3356878,David.Wilson@company.com,Random User 48,TRUE,P@w0rd
 David,Johnson,Specialist,123-555-4573,4238094,David.Johnson@company.com,Random User 49,TRUE,P@w0rd
 Eva,Davis,Developer,123-555-7170,1664365,Eva.Davis@company.com,Random User 50,TRUE,P@w0rd
-Dave,Paterson,HR,123-567-233,1666367,Dave.Paterson@company.com,Random User 51,FALSE,P@w0rd
+Peter,Jackson,Developer,123-555-789,1212121,Peter.Jackson@test.test,User with Error,TEST,P@w0rd
+Pesho,Gramadata,DevOps,123,12223,Pesho.Gramadniq@test.test,,GRAMADATA,
