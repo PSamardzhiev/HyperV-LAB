@@ -1,4 +1,4 @@
-y
+
 # Hyper-V Lab Setup Script
 ## labsetup.ps1 ##
 ## Overview
