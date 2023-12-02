@@ -74,5 +74,3 @@ If you encounter issues during the script execution, refer to the error messages
 Note: Always review and understand the script before execution, especially if it involves making changes to your Active Directory.
 
 
-Copy and paste this markdown code into your README.md file on GitHub. Adjust the formatting as needed.
-
