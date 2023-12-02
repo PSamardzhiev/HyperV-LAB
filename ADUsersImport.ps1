@@ -79,16 +79,26 @@ foreach ($user in $userData) {
     $employeeID = $user."Employee ID"
     $email = $user."Email Address"
     $description = $user."Description"
-    $enabled = $user."Enabled"
+    $enabled = ($user."Enabled").ToLower()
     #$password = $user."Password" password defined below in a variable for easier use
     $PSDString = 'P@ssw0rd2023'
-
+    
+    if ($enabled -eq "true" -or $enabled -eq "false") {
     $enabled = [System.Convert]::ToBoolean($enabled)
+    }
+    else {
+        Write-Host "There is an issue with --> $sam in the CSV File"
+        Write-Host "The Field Enabled should be TRUE OR FALSE"
+        Write-Host "$sam will be created but disabled!"`n
+        start-sleep 7
+        $enabled = "false"
+        $enabled = [System.Convert]::ToBoolean($enabled)
+    }
     $securePassword = ConvertTo-SecureString $PSDString -AsPlainText -Force
 
     #vars for logfile
-    $log_user_exists = "User --> $sam already exists. `n The Script will skip this user!. `n"
-    $log_user_created = "User --> $sam created successfully with password $PSDString. `n This password needs to be changed! `n" 
+    $log_user_exists = "User --> $sam already exists. `n The Script will skip this user!. `n User AD Enabled Status: $enabled"
+    $log_user_created = "User --> $sam created successfully with password $PSDString and AD Enabled Status: $enabled. `n This password needs to be changed! `n" 
 
     try {
         # Check if the user already exists
