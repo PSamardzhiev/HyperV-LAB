@@ -63,7 +63,7 @@ else {
     }
 }
 
-Write-Host "VDHX Created, press any key to continue..."
+Write-Host "VHDX Parent Disk is now created, press any key to continue..."
 Pause
 
 New-VM -Name $LTVM -Path .\ -VHDPath .\$sourcevhd -SwitchName $switch -Generation 2 | `
