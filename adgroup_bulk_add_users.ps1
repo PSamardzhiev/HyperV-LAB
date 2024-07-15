@@ -19,7 +19,7 @@ if (-not (Get-ADGroup -Filter {Name -Like $adgroup} -ErrorAction SilentlyContinu
 foreach ($user in $users) {
     $sam = $user.samaccountname
     if (!(Get-ADUser -Filter {samaccountname -eq $sam} -ErrorAction SilentlyContinue)) {
-        Write-Host "$sam is not found in your active directory" | Out-File c:\ppetkov_log.txt -Append
+        Write-Host "$sam is not found in your active directory" | Out-File c:\temp\ad_group_members_log.txt -Append
         Start-Sleep 1
         continue
     } else {
